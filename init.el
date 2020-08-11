@@ -58,6 +58,11 @@
   (require 'use-package))
 (setq use-package-always-ensure t)
 
+;; Load shell environment variables
+(use-package exec-path-from-shell
+  :init
+  (exec-path-from-shell-initialize))
+
 ;; Evil mode
 (use-package evil
   :init
