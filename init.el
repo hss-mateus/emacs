@@ -209,3 +209,12 @@
 ;; Nix support
 (use-package nix-mode
   :mode "\\.nix\\'")
+
+;; Elm Support
+(use-package elm-mode
+  :hook (elm-mode . lsp))
+
+(use-package robe
+  :hook (ruby-mode . robe-mode)
+  :config
+  (push 'company-robe company-backends))
