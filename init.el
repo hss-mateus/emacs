@@ -3,7 +3,8 @@
       inhibit-splash-screen t
       use-dialog-box nil)
 
-(setq-default line-spacing 0.2)
+(add-hook 'prog-mode-hook
+          (lambda () (setq line-spacing 0.2)))
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -17,6 +18,7 @@
 ;; Enable builtin modes
 (show-paren-mode 1)
 (column-number-mode 1)
+(global-display-line-numbers-mode 1)
 
 ;; Set only one confirmation prompt
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -74,22 +76,17 @@
   :init
   (global-smart-tab-mode))
 
-;; Line numbers
-(use-package linum
-  :config
-  (setq linum-format "%4d  ")
-  :hook (prog-mode . linum-mode))
-
 ;; Doom themes and modeline
 (use-package doom-themes
   :config
-  (setq doom-themes-enable-bold nil
-        doom-themes-enable-italic t)
+  (setq doom-themes-enable-italic t)
   (load-theme 'doom-one t)
   :init
   (doom-themes-org-config))
 
 (use-package doom-modeline
+  :config
+  (setq doom-modeline-icon t)
   :init
   (doom-modeline-mode))
 
@@ -167,7 +164,9 @@
   :commands lsp-ui-mode
   :hook (lsp-mode . lsp-ui-mode)
   :config
-  (setq lsp-ui-sideline-enable nil))
+  (setq lsp-ui-sideline-enable nil
+        lsp-ui-doc-enable nil
+        evil-lookup-func 'lsp-ui-doc-glance))
 
 (use-package company-lsp
   :commands company-lsp
