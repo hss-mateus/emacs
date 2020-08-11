@@ -44,6 +44,12 @@
                                 (eshell)
                                 (switch-to-buffer "*eshell*")))
 
+;; Kill all buffers
+(global-set-key (kbd "C-x K") (lambda ()
+                                (interactive)
+                                (mapc 'kill-buffer (buffer-list))
+                                (delete-other-windows)))
+
 ;; Setup package.el
 (require 'package)
 (setq package-enable-at-startup nil)
