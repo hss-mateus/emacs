@@ -91,6 +91,11 @@
   :init
   (global-smart-tab-mode))
 
+;; EditorConfig
+(use-package editorconfig
+  :config
+  (editorconfig-mode 1))
+
 ;; Doom themes and modeline
 (use-package doom-themes
   :config
@@ -103,6 +108,14 @@
 (use-package doom-modeline
   :init
   (doom-modeline-mode))
+
+;; Project tree view
+(use-package neotree
+  :bind ("C-c o t" . neotree-toggle)
+  :config
+  (setq neo-theme 'icons
+        neo-window-width 40
+        neo-mode-line-type 'none))
 
 ;; Auto completion
 (use-package company
@@ -171,7 +184,7 @@
   :init
   (counsel-projectile-mode))
 
-;; LSP support
+;; LSP
 (use-package lsp-mode)
 
 (use-package lsp-ui
@@ -188,6 +201,8 @@
   (push 'company-lsp company-backends)
   (setq company-lsp-async t
         company-lsp-enable-recompletion t))
+
+(use-package lsp-treemacs)
 
 ;; Parinfer for lispy languages
 (use-package parinfer
