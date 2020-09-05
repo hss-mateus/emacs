@@ -214,7 +214,7 @@
    :init
    (setq parinfer-extensions '(defaults evil)))
 
-;; Scheme support
+;; Scheme
 (use-package geiser)
 
 (use-package flycheck-guile
@@ -232,10 +232,11 @@
                                     "-fdefer-typed-holes"
                                     "-fdefer-type-errors")))
 
+;; Nix
 (use-package nix-mode
   :mode "\\.nix\\'")
 
-;; Elm Support
+;; Elm
 (use-package elm-mode
   :hook (elm-mode . lsp))
 
