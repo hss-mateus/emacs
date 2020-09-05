@@ -220,22 +220,18 @@
 (use-package flycheck-guile
   :after geiser)
 
-;; Haskell support
+;; Haskell
 (use-package haskell-mode
-  :hook (haskell-mode . interactive-haskell-mode))
-
-(use-package dante
-  :hook (haskell-mode . dante-mode)
+  :hook (haskell-mode . interactive-haskell-mode)
   :config
-  (setq dante-load-flags '("+c"
-                           "-Wwarn=missing-home-modules"
-                           "-fno-diagnostics-show-caret"
-                           "-Wall"
-                           "-fdefer-typed-holes"
-                           "-fdefer-type-errors"))
-  (flycheck-add-next-checker 'haskell-dante '(info . haskell-hlint)))
+  (flycheck-add-next-checker 'haskell-ghc '(info . haskell-hlint))
+  (setq haskell-process-args-ghci '("+c"
+                                    "-Wwarn=missing-home-modules"
+                                    "-fno-diagnostics-show-caret"
+                                    "-Wall"
+                                    "-fdefer-typed-holes"
+                                    "-fdefer-type-errors")))
 
-;; Nix support
 (use-package nix-mode
   :mode "\\.nix\\'")
 
