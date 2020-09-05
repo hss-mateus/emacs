@@ -243,7 +243,10 @@
 (use-package elm-mode
   :hook (elm-mode . lsp))
 
+;; Ruby
 (use-package robe
   :hook (ruby-mode . robe-mode)
+  :bind (:map ruby-mode-map
+              ("C-c '" . eshell-open-split))
   :config
   (push 'company-robe company-backends))
