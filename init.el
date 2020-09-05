@@ -250,3 +250,53 @@
               ("C-c '" . eshell-open-split))
   :config
   (push 'company-robe company-backends))
+
+;; Reason
+(use-package reason-mode
+  :hook (reason-mode . lsp)
+  :bind (:map reason-mode-map
+              ("C-c C-f" . refmt))
+  :config
+  (setq refmt-command "bsrefmt")
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection "/usr/bin/reason-language-server")
+                    :major-modes '(reason-mode)
+                    :notification-handlers (ht ("client/registerCapability" 'ignore))
+                    :priority 1
+                    :server-id 'reason-ls)))
+
+;; Clojure
+(use-package cider)
+
+(use-package flycheck-clj-kondo)
+
+;; C
+(add-hook 'c-mode-hook 'lsp)
+
+;; JS/TS
+(use-package js2-mode
+  :hook (js-mode . js2-minor-mode)
+  :config (setq js-chain-indent t
+                js2-basic-offset 2
+                js2-mode-show-parse-errors nil
+                js2-mode-show-strict-warnings nil
+                js2-strict-trailing-comma-warning nil
+                js2-strict-missing-semi-warning nil))
+
+(use-package tide
+  :hook ((js-mode typescript-mode) . tide-setup))
+
+(use-package typescript-mode
+  :bind (:map typescript-mode-map
+              ("C-c '" . eshell-open-split)))
+
+(use-package json-mode)
+
+;; Rust
+(use-package rustic
+  :config
+  (setq rustic-lsp-server 'rust-analyzer))
+
+;; Standard ML
+(use-package sml-mode
+  :hook (sml-mode . (lambda () (push ?' (cl-getf autopair-dont-pair :comment)))))
