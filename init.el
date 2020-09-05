@@ -3,9 +3,6 @@
       inhibit-splash-screen t
       use-dialog-box nil)
 
-(add-hook 'prog-mode-hook
-          (lambda () (setq line-spacing 0.2)))
-
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -13,12 +10,15 @@
 
 ;; Default font
 (set-face-attribute 'default nil
-                    :family "Hasklig")
+                    :family "FantasqueSansMono Nerd Font"
+                    :height 120)
+
+(setq-default line-spacing 0.4)
 
 ;; Enable builtin modes
 (show-paren-mode 1)
 (column-number-mode 1)
-(global-display-line-numbers-mode 1)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 ;; Set only one confirmation prompt
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -91,13 +91,12 @@
 (use-package doom-themes
   :config
   (setq doom-themes-enable-italic t)
-  (load-theme 'doom-one t)
+  (load-theme 'doom-solarized-dark t)
   :init
-  (doom-themes-org-config))
+  (doom-themes-org-config)
+  (doom-themes-neotree-config))
 
 (use-package doom-modeline
-  :config
-  (setq doom-modeline-icon t)
   :init
   (doom-modeline-mode))
 
