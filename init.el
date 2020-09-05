@@ -38,11 +38,15 @@
       scroll-preserve-screen-position 1)
 
 ;; Open a terminal split
-(global-set-key (kbd "C-c '") (lambda ()
-                                (interactive)
-                                (select-window (split-window-below -20))
-                                (eshell)
-                                (switch-to-buffer "*eshell*")))
+(global-set-key (kbd "C-c '") 'eshell-open-split)
+
+(defun eshell-open-split ()
+  "Open eshell in a horizontal split below."
+  (interactive)
+  (select-window (split-window-below -20))
+  (eshell)
+  (switch-to-buffer "*eshell*"))
+
 
 ;; Kill all buffers
 (global-set-key (kbd "C-x K") (lambda ()
