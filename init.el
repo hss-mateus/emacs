@@ -211,8 +211,8 @@
           scheme-mode
           lisp-mode
           racket-mode) . parinfer-mode)
-  :config
-  (setq parinfer-extensions '(defaults evil smart-tab)))
+   :init
+   (setq parinfer-extensions '(defaults evil)))
 
 ;; Scheme support
 (use-package geiser)
