@@ -10,8 +10,8 @@
 
 ;; Default font
 (set-face-attribute 'default nil
-                    :family "FantasqueSansMono Nerd Font"
-                    :height 120)
+                    :family "mononoki Nerd Font"
+                    :height 110)
 
 (setq-default line-spacing 0.4)
 
@@ -38,15 +38,14 @@
       scroll-preserve-screen-position 1)
 
 ;; Open a terminal split
-(global-set-key (kbd "C-c '") 'eshell-open-split)
+(global-set-key (kbd "C-c '") 'vterm-open-split)
 
-(defun eshell-open-split ()
-  "Open eshell in a horizontal split below."
+(defun vterm-open-split ()
+  "Open vterm in a horizontal split below."
   (interactive)
   (select-window (split-window-below -20))
-  (eshell)
-  (switch-to-buffer "*eshell*"))
-
+  (vterm)
+  (switch-to-buffer "*vterm*"))
 
 ;; Kill all buffers
 (global-set-key (kbd "C-x K") (lambda ()
@@ -71,7 +70,11 @@
 ;; Load shell environment variables
 (use-package exec-path-from-shell
   :init
+  (setq exec-path-from-shell-arguments '("-l"))
   (exec-path-from-shell-initialize))
+
+;; Terminal
+(use-package vterm)
 
 ;; Evil mode
 (use-package evil
@@ -170,22 +173,24 @@
   :bind
   (("C-c g" . magit-status)))
 
-(use-package evil-magit)
-
 (use-package git-gutter+
   :hook (prog-mode . git-gutter+-mode))
 
 ;; Project management
 (use-package projectile
   :bind
-  (("C-c p" . projectile-command-map)))
+  (("C-c p" . projectile-command-map))
+  :init
+  (projectile-mode 1))
 
 (use-package counsel-projectile
   :init
   (counsel-projectile-mode))
 
 ;; LSP
-(use-package lsp-mode)
+(use-package lsp-mode
+  :config
+  (setq lsp-headerline-breadcrumb-enable nil))
 
 (use-package lsp-ui
   :commands lsp-ui-mode
@@ -195,77 +200,29 @@
         lsp-ui-doc-enable nil
         evil-lookup-func 'lsp-ui-doc-glance))
 
-(use-package company-lsp
-  :commands company-lsp
-  :config
-  (push 'company-lsp company-backends)
-  (setq company-lsp-async t
-        company-lsp-enable-recompletion t))
-
 (use-package lsp-treemacs)
 
-;; Parinfer for lispy languages
-(use-package parinfer
-  :hook ((emacs-lisp-mode
-          clojure-mode
-          scheme-mode
-          lisp-mode
-          racket-mode) . parinfer-mode)
-   :init
-   (setq parinfer-extensions '(defaults evil)))
+(use-package rbenv
+  :hook (after-init . global-rbenv-mode)
+  :init (setq rbenv-show-active-ruby-in-modeline nil
+              rbenv-executable "rbenv"))
 
-;; Scheme
-(use-package geiser)
+(use-package yaml-mode)
 
-(use-package flycheck-guile
-  :after geiser)
-
-;; Haskell
-(use-package haskell-mode
-  :hook (haskell-mode . interactive-haskell-mode)
+(use-package inf-ruby
   :config
-  (flycheck-add-next-checker 'haskell-ghc '(info . haskell-hlint))
-  (setq haskell-process-args-ghci '("+c"
-                                    "-Wwarn=missing-home-modules"
-                                    "-fno-diagnostics-show-caret"
-                                    "-Wall"
-                                    "-fdefer-typed-holes"
-                                    "-fdefer-type-errors")))
-
-;; Nix
-(use-package nix-mode
-  :mode "\\.nix\\'")
-
-;; Elm
-(use-package elm-mode
-  :hook (elm-mode . lsp))
-
-;; Ruby
-(use-package robe
-  :hook (ruby-mode . robe-mode)
+  (setq ruby-insert-encoding-magic-comment nil)
   :bind (:map ruby-mode-map
-              ("C-c '" . eshell-open-split))
-  :config
-  (push 'company-robe company-backends))
+              ("C-c '" . vterm-open-split))
+  :hook ((ruby-mode . inf-ruby-minor-mode)
+         (ruby-mode . lsp)
+         (compilation-filter . inf-ruby-auto-enter)))
 
-;; Reason
-(use-package reason-mode
-  :hook (reason-mode . lsp)
-  :bind (:map reason-mode-map
-              ("C-c C-f" . refmt))
-  :config
-  (setq refmt-command "bsrefmt")
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection "/usr/bin/reason-language-server")
-                    :major-modes '(reason-mode)
-                    :notification-handlers (ht ("client/registerCapability" 'ignore))
-                    :priority 1
-                    :server-id 'reason-ls)))
+(use-package yard-mode
+  :hook (ruby-mode . yard-mode))
 
-;; Clojure
-(use-package cider)
-
-(use-package flycheck-clj-kondo)
+(use-package projectile-rails
+  :hook (projectile-mode . projectile-rails-global-mode))
 
 ;; C
 (add-hook 'c-mode-hook 'lsp)
@@ -289,11 +246,8 @@
 
 (use-package json-mode)
 
-;; Rust
-(use-package rustic
-  :config
-  (setq rustic-lsp-server 'rust-analyzer))
+;; HTML
+(use-package web-mode)
 
-;; Standard ML
-(use-package sml-mode
-  :hook (sml-mode . (lambda () (push ?' (cl-getf autopair-dont-pair :comment)))))
+;; Slim
+(use-package slim-mode)
