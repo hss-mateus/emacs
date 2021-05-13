@@ -251,3 +251,13 @@
 
 ;; Slim
 (use-package slim-mode)
+
+;; Elixir
+(use-package elixir-mode
+  :hook (elixir-mode-local-vars . lsp))
+
+(use-package flycheck-credo
+  :config (flycheck-credo-setup))
+
+(use-package alchemist
+  :hook (elixir-mode . alchemist-mode))
